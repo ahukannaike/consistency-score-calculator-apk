@@ -55,21 +55,16 @@ jobs:
         working-directory: ${{ env.PROJECT_DIR }}
         run: npm run build
 
-      - name: Prepare Android project
+      - name: Prepare Android assets
         run: |
-          mkdir -p android/app/src/main/assets
+          rm -rf android
+          mkdir -p android/app/src/main/assets/www
+          cp -r "${PROJECT_DIR}/dist/." android/app/src/main/assets/www/
 
-          cp -r "${PROJECT_DIR}/dist/." android/app/src/main/assets/
-
-      - name: Create Android project files
+      - name: Create Android project
         run: |
           mkdir -p android/app/src/main/java/com/bypass/calculator
-          mkdir -p android/app/src/main/res/layout
-          mkdir -p android/app/src/main/res/mipmap-hdpi
-          mkdir -p android/app/src/main/res/mipmap-mdpi
-          mkdir -p android/app/src/main/res/mipmap-xhdpi
-          mkdir -p android/app/src/main/res/mipmap-xxhdpi
-          mkdir -p android/app/src/main/res/mipmap-xxxhdpi
+          mkdir -p android/app/src/main/res/values
 
           cat > android/settings.gradle <<'EOF'
           pluginManagement {
@@ -115,17 +110,18 @@ jobs:
                   versionName '1.0'
               }
           }
+
+          dependencies {
+              implementation 'androidx.webkit:webkit:1.13.0'
+          }
           EOF
 
           cat > android/app/src/main/AndroidManifest.xml <<'EOF'
           <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-              <uses-permission android:name="android.permission.INTERNET" />
-
               <application
                   android:theme="@style/AppTheme"
-                  android:label="Consistency Score Calculator"
-                  android:usesCleartextTraffic="true">
+                  android:label="Consistency Score Calculator">
 
                   <activity
                       android:name=".MainActivity"
@@ -143,8 +139,6 @@ jobs:
           </manifest>
           EOF
 
-          mkdir -p android/app/src/main/res/values
-
           cat > android/app/src/main/res/values/styles.xml <<'EOF'
           <resources>
               <style name="AppTheme" parent="android:style/Theme.Material.Light.NoActionBar">
@@ -159,9 +153,14 @@ jobs:
 
           import android.app.Activity;
           import android.os.Bundle;
-          import android.webkit.WebSettings;
+          import android.webkit.WebResourceRequest;
+          import android.webkit.WebResourceResponse;
           import android.webkit.WebView;
-          import android.webkit.WebViewClient;
+          
+        
+
+          import androidx.webkit.WebViewAssetLoader;
+          import androidx.webkit.WebViewClientCompat;
 
           public class MainActivity extends Activity {
 
@@ -172,14 +171,29 @@ jobs:
                   WebView webView = new WebView(this);
                   setContentView(webView);
 
-                  WebSettings settings = webView.getSettings();
-                  settings.setJavaScriptEnabled(true);
-                  settings.setDomStorageEnabled(true);
-                  settings.setAllowFileAccess(true);
-                  settings.setAllowContentAccess(true);
+                  webView.getSettings().setJavaScriptEnabled(true);
+                  webView.getSettings().setDomStorageEnabled(true);
 
-                  webView.setWebViewClient(new WebViewClient());
-                  webView.loadUrl("file:///android_asset/index.html");
+                  final WebViewAssetLoader assetLoader =
+                          new WebViewAssetLoader.Builder()
+                                  .addPathHandler(
+                                          "/assets/",
+                                          new WebViewAssetLoader.AssetsPathHandler(this)
+                                  )
+                                  .build();
+
+                  webView.setWebViewClient(new WebViewClientCompat() {
+                      @Override
+                      public WebResourceResponse shouldInterceptRequest(
+                              WebView view,
+                              WebResourceRequest request) {
+                          return assetLoader.shouldInterceptRequest(request.getUrl());
+                      }
+                  });
+
+                  webView.loadUrl(
+                          "https://appassets.androidplatform.net/assets/www/index.html"
+                  );
               }
           }
           EOF
