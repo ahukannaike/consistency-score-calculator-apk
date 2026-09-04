@@ -1,0 +1,170 @@
+@import "tailwindcss";
+
+:root {
+  color-scheme: dark;
+  -webkit-tap-highlight-color: transparent;
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px;
+  scroll-padding-bottom: 30px;
+}
+
+body {
+  overflow-x: hidden;
+  min-height: 100vh;
+  min-height: 100dvh;
+  overscroll-behavior-y: contain;
+}
+
+@keyframes continuousHaloFast {
+  0%, 100% {
+    box-shadow: 0 0 18px 3px rgba(245, 158, 11, 0.45),
+                0 0 36px 8px rgba(217, 119, 6, 0.3),
+                inset 0 0 14px rgba(251, 191, 36, 0.22);
+    border-color: rgba(251, 191, 36, 0.85);
+  }
+  50% {
+    box-shadow: 0 0 32px 8px rgba(251, 191, 36, 0.8),
+                0 0 56px 14px rgba(245, 158, 11, 0.5),
+                inset 0 0 22px rgba(253, 224, 71, 0.4);
+    border-color: rgba(254, 240, 138, 1);
+  }
+}
+
+@keyframes continuousShimmerFast {
+  0% {
+    transform: translate3d(-160%, 0, 0) skewX(-20deg);
+  }
+  100% {
+    transform: translate3d(260%, 0, 0) skewX(-20deg);
+  }
+}
+
+@keyframes energySweepFast {
+  0% {
+    opacity: 0.45;
+    transform: translate3d(0, 0, 0) scaleX(0.92) scaleY(0.95);
+  }
+  50% {
+    opacity: 0.95;
+    transform: translate3d(0, 0, 0) scaleX(1.03) scaleY(1.04);
+  }
+  100% {
+    opacity: 0.45;
+    transform: translate3d(0, 0, 0) scaleX(0.92) scaleY(0.95);
+  }
+}
+
+@keyframes buttonAmbientPulse {
+  0%, 100% {
+    box-shadow: 0 0 16px 2px rgba(16, 185, 129, 0.35),
+                0 0 30px 4px rgba(16, 185, 129, 0.15);
+  }
+  50% {
+    box-shadow: 0 0 24px 6px rgba(16, 185, 129, 0.6),
+                0 0 45px 10px rgba(16, 185, 129, 0.25);
+  }
+}
+
+@keyframes radarScan {
+  0% {
+    transform: translate3d(-100%, 0, 0);
+  }
+  100% {
+    transform: translate3d(200%, 0, 0);
+  }
+}
+
+@keyframes terminalBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
+}
+
+@keyframes scoreGlowPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.6);
+  }
+  50% {
+    box-shadow: 0 0 25px 5px rgba(16, 185, 129, 0.4);
+  }
+  100% {
+    box-shadow: 0 0 10px 1px rgba(16, 185, 129, 0.15);
+  }
+}
+
+@keyframes scoreGlowPulseAmber {
+  0% {
+    box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.6);
+  }
+  50% {
+    box-shadow: 0 0 25px 5px rgba(245, 158, 11, 0.4);
+  }
+  100% {
+    box-shadow: 0 0 10px 1px rgba(245, 158, 11, 0.15);
+  }
+}
+
+@keyframes rippleEffect {
+  0% {
+    transform: scale(0);
+    opacity: 0.75;
+  }
+  100% {
+    transform: scale(3.5);
+    opacity: 0;
+  }
+}
+
+.animate-btn-pulse {
+  animation: buttonAmbientPulse 2s ease-in-out infinite;
+  will-change: box-shadow;
+}
+
+.animate-radar-scan {
+  animation: radarScan 1.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  will-change: transform;
+}
+
+.animate-score-pulse-emerald {
+  animation: scoreGlowPulse 1.2s ease-out 1 forwards;
+}
+
+.animate-score-pulse-amber {
+  animation: scoreGlowPulseAmber 1.2s ease-out 1 forwards;
+}
+
+.animate-terminal-blink {
+  animation: terminalBlink 0.8s ease-in-out infinite;
+}
+
+.animate-radiant-glow {
+  animation: continuousHaloFast 1.2s ease-in-out infinite;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  will-change: box-shadow, border-color;
+}
+
+.animate-light-shimmer {
+  animation: continuousShimmerFast 1.1s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  will-change: transform;
+}
+
+.animate-energy-pulse {
+  animation: energySweepFast 1.2s ease-in-out infinite;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  will-change: opacity, transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-radiant-glow {
+    animation-duration: 2.5s;
+  }
+  .animate-light-shimmer {
+    animation-duration: 3s;
+  }
+  .animate-energy-pulse {
+    animation-duration: 2.5s;
+  }
+}
