@@ -66,6 +66,11 @@ jobs:
           mkdir -p android/app/src/main/java/com/bypass/calculator
           mkdir -p android/app/src/main/res/values
 
+          cat > android/gradle.properties <<'EOF'
+          android.useAndroidX=true
+          android.enableJetifier=true
+          EOF
+
           cat > android/settings.gradle <<'EOF'
           pluginManagement {
               repositories {
@@ -156,8 +161,6 @@ jobs:
           import android.webkit.WebResourceRequest;
           import android.webkit.WebResourceResponse;
           import android.webkit.WebView;
-          
-        
 
           import androidx.webkit.WebViewAssetLoader;
           import androidx.webkit.WebViewClientCompat;
