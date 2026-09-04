@@ -1,0 +1,8 @@
+{
+  "name": "Remix BY-PASS – Prop Firm Consistency Score Calculator",
+  "description": "Offline Prop Firm Consistency Score Calculator designed to calculate pass/fail status, maximum allowed best day, additional profit needed, daily profit cap, and minimum days required.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
